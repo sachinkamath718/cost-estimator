@@ -1,0 +1,1152 @@
+
+<!DOCTYPE html> <html lang="en"> <head> <meta charset="UTF-8"/> <meta name="viewport" content="width=device-width,initial-scale=1"/> <title>Kafka Pricing — Zeliot</title> <link rel="preconnect" href="https://fonts.googleapis.com"/> <link href="https://fonts.googleapis.com/css2?family=Space+Gr
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Kafka Pricing — Zeliot</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --bg:       #080c14;
+  --surface:  #0c1220;
+  --card:     #101827;
+  --card2:    #141f30;
+  --border:   #1a2740;
+  --border2:  #213050;
+  --text:     #e2eaf6;
+  --muted:    #6b80a0;
+  --faint:    #344060;
+  --blue:     #2563eb;
+  --blue-lt:  #60a5fa;
+  --blue-glow:rgba(37,99,235,0.12);
+  --green:    #10b981;
+  --amber:    #f59e0b;
+  --red:      #ef4444;
+  --condense: #00d4a0;
+  --msk:      #ff9900;
+  --eh:       #0ea5e9;
+  --ibm:      #a78bfa;
+  --sans: 'Space Grotesk', sans-serif;
+  --mono: 'JetBrains Mono', monospace;
+  --r: 10px;
+  --r-sm: 7px;
+  --t: 0.16s ease;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);font-size:14px;line-height:1.6;min-height:100vh}
+ 
+.topbar{height:52px;border-bottom:1px solid var(--border);background:rgba(8,12,20,0.95);backdrop-filter:blur(12px);position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 28px;}
+.brand{display:flex;align-items:center;gap:9px}
+.brand-mark{width:26px;height:26px;border-radius:6px;background:linear-gradient(135deg,var(--blue),var(--blue-lt));display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;color:#fff;}
+.brand-name{font-size:15px;font-weight:700;letter-spacing:-.3px}
+.brand-name span{color:var(--blue-lt)}
+.topbar-chip{font-size:11px;color:var(--muted);background:var(--card);border:1px solid var(--border);padding:3px 10px;border-radius:100px;}
+ 
+.page{max-width:1320px;margin:0 auto;padding:28px 28px 80px}
+.page-head{margin-bottom:28px}
+.page-head h1{font-size:24px;font-weight:700;letter-spacing:-.4px;color:#fff;margin-bottom:4px}
+.page-head h1 span{color:var(--blue-lt)}
+.page-head p{font-size:13px;color:var(--muted);max-width:680px;line-height:1.7}
+.badges{display:flex;gap:7px;margin-top:12px;flex-wrap:wrap}
+.badge{display:flex;align-items:center;gap:5px;padding:3px 10px;border:1px solid var(--border);border-radius:100px;font-size:11.5px;color:var(--muted);background:var(--card);}
+.badge-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+ 
+.layout{display:grid;grid-template-columns:280px 1fr;gap:18px;align-items:start}
+ 
+.config{background:var(--card);border:1px solid var(--border);border-radius:var(--r);position:sticky;top:60px;}
+.config-head{padding:12px 16px 10px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:7px;}
+.config-head h2{font-size:10.5px;font-weight:600;text-transform:uppercase;letter-spacing:.1em;color:var(--faint)}
+.pulse{width:5px;height:5px;border-radius:50%;background:var(--green);animation:pulse 2s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.config-body{padding:16px;display:flex;flex-direction:column;gap:18px}
+ 
+.flabel{font-size:10.5px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
+.flabel .fval{font-family:var(--mono);font-size:12px;color:var(--blue-lt);text-transform:none;letter-spacing:0;font-weight:500}
+ 
+.z-select{width:100%;padding:7px 10px;background:var(--card2);border:1px solid var(--border2);border-radius:var(--r-sm);color:var(--text);font-size:12.5px;font-family:var(--sans);outline:none;cursor:pointer;transition:border-color var(--t);-webkit-appearance:none;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b80a0' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 9px center;padding-right:26px;}
+.z-select:focus{border-color:var(--blue)}
+.z-select option,.z-select optgroup{background:#101827}
+ 
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:3px;background:var(--border2);border-radius:2px;outline:none;cursor:pointer;display:block;}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:15px;height:15px;border-radius:50%;background:var(--blue);border:2px solid var(--bg);box-shadow:0 0 0 1.5px var(--blue);cursor:pointer;transition:transform var(--t);}
+input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.2)}
+ 
+.qrow{display:flex;gap:3px;flex-wrap:wrap;margin-top:7px}
+.qbtn{padding:2px 8px;border:1px solid var(--border2);border-radius:5px;background:transparent;color:var(--muted);font-size:10.5px;font-family:var(--mono);cursor:pointer;transition:all var(--t);}
+.qbtn:hover,.qbtn.active{border-color:var(--blue);color:var(--blue-lt);background:var(--blue-glow)}
+ 
+.nrow{display:flex;align-items:center;gap:7px;margin-top:7px}
+.ninp{width:68px;padding:5px 9px;background:var(--card2);border:1px solid var(--border2);border-radius:var(--r-sm);color:var(--text);font-family:var(--mono);font-size:13px;outline:none;-moz-appearance:textfield;appearance:textfield;transition:border-color var(--t);}
+.ninp::-webkit-inner-spin-button{-webkit-appearance:none;appearance:none}
+.ninp:focus{border-color:var(--blue)}
+.nunit{font-size:11px;color:var(--faint)}
+ 
+.reprow{display:flex;gap:4px}
+.repbtn{flex:1;padding:6px 0;border:1px solid var(--border2);border-radius:var(--r-sm);background:transparent;color:var(--muted);font-size:13px;font-weight:600;font-family:var(--mono);cursor:pointer;transition:all var(--t);}
+.repbtn:hover,.repbtn.active{border-color:var(--blue);color:var(--blue-lt);background:var(--blue-glow)}
+ 
+.cloudrow{display:flex;gap:4px}
+.cloudbtn{flex:1;padding:6px 0;border:1px solid var(--border2);border-radius:var(--r-sm);background:transparent;color:var(--muted);font-size:11.5px;font-weight:600;cursor:pointer;transition:all var(--t);}
+.cloudbtn:hover,.cloudbtn.active{border-color:var(--condense);color:var(--condense);background:rgba(0,212,160,.08)}
+.cloud-note{font-size:10px;color:var(--faint);margin-top:4px;line-height:1.5}
+ 
+.fdiv{border:none;border-top:1px solid var(--border);margin:2px 0}
+ 
+.estimate-btn{width:100%;padding:10px 0;border:none;border-radius:var(--r-sm);background:var(--blue);color:#fff;font-size:13px;font-weight:600;font-family:var(--sans);cursor:pointer;transition:background var(--t);display:flex;align-items:center;justify-content:center;gap:8px;}
+.estimate-btn:hover{background:#1d4ed8}
+.estimate-btn:disabled{background:var(--faint);cursor:not-allowed}
+.estimate-btn .btn-spin{width:14px;height:14px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;display:none;}
+.estimate-btn.loading .btn-spin{display:block}
+@keyframes spin{to{transform:rotate(360deg)}}
+ 
+.results{display:flex;flex-direction:column;gap:14px}
+ 
+.chart-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:18px 20px;}
+.card-title{font-size:10.5px;font-weight:600;text-transform:uppercase;letter-spacing:.1em;color:var(--faint);margin-bottom:16px}
+.bar-chart{display:flex;flex-direction:column;gap:10px}
+.bar-row{display:flex;align-items:center;gap:11px}
+.bar-label{width:140px;flex-shrink:0;display:flex;align-items:center;gap:6px;font-size:12px;font-weight:500;color:var(--text);}
+.bar-cdot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.bar-track{flex:1;height:9px;background:var(--border);border-radius:5px;overflow:hidden}
+.bar-fill{height:100%;border-radius:5px;transition:width .6s cubic-bezier(.34,1.2,.64,1)}
+.bar-amount{width:130px;flex-shrink:0;font-family:var(--mono);font-size:12.5px;font-weight:500;color:var(--text);text-align:right;display:flex;align-items:center;justify-content:flex-end;gap:6px;}
+.lowest-pill{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--condense);background:rgba(0,212,160,.1);border:1px solid rgba(0,212,160,.25);padding:1px 6px;border-radius:100px;}
+.pending-txt{font-size:11px;color:var(--faint)}
+ 
+.accordion{background:var(--card);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;transition:border-color var(--t);}
+.accordion.open{border-color:var(--border2)}
+.acc-header{display:flex;align-items:center;gap:12px;padding:15px 18px;cursor:pointer;transition:background var(--t);user-select:none;}
+.acc-header:hover{background:rgba(255,255,255,.02)}
+.acc-stripe{width:3px;height:34px;border-radius:2px;flex-shrink:0}
+.acc-info{flex:1;min-width:0}
+.acc-name{font-size:13.5px;font-weight:600;color:var(--text);display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.tag{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;padding:2px 7px;border-radius:100px;}
+.tag-live{background:rgba(0,212,160,.1);color:var(--condense);border:1px solid rgba(0,212,160,.2)}
+.tag-api{background:rgba(37,99,235,.1);color:var(--blue-lt);border:1px solid rgba(37,99,235,.2)}
+.tag-fixed{background:rgba(107,128,160,.1);color:var(--muted);border:1px solid var(--border2)}
+.acc-sub{font-size:11px;color:var(--muted);margin-top:2px}
+.acc-right{display:flex;align-items:center;gap:12px;flex-shrink:0}
+.acc-total{font-family:var(--mono);font-size:19px;font-weight:500;color:var(--text);min-width:95px;text-align:right}
+.acc-total.pending{font-size:11.5px;color:var(--faint)}
+.acc-total.loading-state{font-size:11.5px;color:var(--blue-lt)}
+.acc-chevron{width:17px;height:17px;color:var(--faint);transition:transform .22s ease;flex-shrink:0}
+.acc-chevron.open{transform:rotate(180deg)}
+ 
+.acc-body{display:none;border-top:1px solid var(--border)}
+.acc-body.open{display:block}
+.inner{padding:14px 18px;border-bottom:1px solid rgba(255,255,255,.035)}
+.inner:last-child{border-bottom:none}
+.sec-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--faint);margin-bottom:9px}
+ 
+.drow{display:flex;justify-content:space-between;align-items:flex-start;padding:5px 0;gap:14px;border-bottom:1px solid rgba(255,255,255,.022);}
+.drow:last-child{border-bottom:none}
+.drow-l{flex:1;min-width:0}
+.drow-name{font-size:12px;color:var(--muted)}
+.drow-calc{font-size:10.5px;color:var(--faint);font-family:var(--mono);margin-top:1px;line-height:1.4}
+.drow-val{font-family:var(--mono);font-size:12.5px;font-weight:500;color:var(--text);white-space:nowrap;flex-shrink:0}
+.drow-val.accent{color:var(--blue-lt)}
+ 
+.status-chip{display:inline-flex;align-items:center;gap:6px;font-size:11px;padding:4px 10px;border-radius:100px;background:var(--card2);border:1px solid var(--border);}
+.schip-dot{width:5px;height:5px;border-radius:50%}
+.status-chip.ok{color:var(--condense)}.status-chip.ok .schip-dot{background:var(--condense)}
+.status-chip.err{color:var(--red)}.status-chip.err .schip-dot{background:var(--red)}
+.status-chip.loading{color:var(--blue-lt)}.status-chip.loading .schip-dot{background:var(--blue);animation:pulse .7s ease-in-out infinite}
+.status-chip.idle{color:var(--muted)}.status-chip.idle .schip-dot{background:var(--faint)}
+ 
+.ppills{display:flex;gap:7px;flex-wrap:wrap;padding:10px 18px;background:var(--card2);border-bottom:1px solid var(--border)}
+.ppill{background:var(--card);border:1px solid var(--border);border-radius:var(--r-sm);padding:6px 10px}
+.ppill-label{font-size:9.5px;color:var(--faint);font-weight:600;text-transform:uppercase;letter-spacing:.06em}
+.ppill-val{font-family:var(--mono);font-size:12.5px;color:var(--text);margin-top:2px}
+ 
+.tier-toggle{display:flex;gap:7px}
+.tier-btn{flex:1;padding:8px 10px;border:1px solid var(--border2);border-radius:var(--r-sm);background:transparent;color:var(--muted);font-size:11.5px;font-weight:600;cursor:pointer;font-family:var(--sans);text-align:center;transition:all var(--t);}
+.tier-btn small{font-size:9.5px;opacity:.65;display:block;margin-top:2px}
+.tier-btn.active{border-color:var(--eh);color:#7dd3fc;background:rgba(14,165,233,.08)}
+ 
+.ibm-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.ibm-box{background:var(--card2);border:1px solid var(--border2);border-radius:var(--r-sm);padding:9px 11px}
+.ibm-box-label{font-size:9.5px;color:var(--faint);font-weight:600;text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px}
+.ibm-box-val{font-family:var(--mono);font-size:15px;font-weight:600;color:var(--ibm)}
+.ibm-box-sub{font-size:10px;color:var(--faint);margin-top:2px}
+ 
+.dist-track{height:6px;border-radius:3px;overflow:hidden;display:flex;gap:2px;margin-bottom:8px}
+.dist-seg{height:100%;border-radius:2px;transition:flex .5s cubic-bezier(.34,1.2,.64,1)}
+.dist-legend{display:flex;flex-wrap:wrap;gap:4px 12px}
+.dist-item{display:flex;align-items:center;gap:4px;font-size:11px;color:var(--muted)}
+.dist-dot{width:7px;height:7px;border-radius:2px;flex-shrink:0}
+.dist-pct{color:var(--faint);font-family:var(--mono);font-size:10px}
+ 
+@media(max-width:900px){
+  .layout{grid-template-columns:1fr}
+  .config{position:static}
+  .topbar,.page{padding-left:16px;padding-right:16px}
+}
+</style>
+</head>
+<body>
+ 
+<div class="topbar">
+  <div class="brand">
+    <div class="brand-mark">Z</div>
+    <div class="brand-name">Zeliot<span>.in</span></div>
+  </div>
+  <div class="topbar-chip">Kafka Pricing Calculator</div>
+</div>
+ 
+<div class="page">
+  <div class="page-head">
+    <h1>Kafka <span>Pricing</span> Calculator</h1>
+    <p>Compare monthly costs across Condense, AWS MSK Serverless, Azure Event Hubs, and IBM Event Streams. Configure your requirements and click <strong>Estimate Prices</strong>.</p>
+  </div>
+ 
+  <div class="layout">
+ 
+    <!-- CONFIG PANEL -->
+    <div class="config">
+      <div class="config-head">
+        <div class="pulse"></div>
+        <h2>Configuration</h2>
+      </div>
+      <div class="config-body">
+ 
+        <!-- Region -->
+        <div>
+          <div class="flabel">Region</div>
+          <select class="z-select" id="global-region">
+            <optgroup label="India">
+              <option value="india" data-msk="ap-south-1" data-eh="southindia" data-ibm="us-south" selected>India — Mumbai / South India</option>
+            </optgroup>
+            <optgroup label="Asia Pacific">
+  <option value="apac-sg"    data-msk="ap-southeast-1" data-eh="southeastasia"     data-ibm="jp-tok">Singapore / Southeast Asia</option>
+  <option value="apac-tok"   data-msk="ap-northeast-1" data-eh="japaneast"          data-ibm="jp-tok">Tokyo / Japan East</option>
+  <option value="apac-syd"   data-msk="ap-southeast-2" data-eh="australiaeast"      data-ibm="au-syd">Sydney / Australia East</option>
+  <option value="apac-hk"    data-msk="ap-east-1"      data-eh="eastasia"           data-ibm="jp-tok">Hong Kong / East Asia</option>
+  <option value="apac-seoul" data-msk="ap-northeast-2" data-eh="koreacentral"       data-ibm="jp-tok">Seoul / Korea Central</option>
+  <option value="apac-hyd"   data-msk="ap-south-2"     data-eh="centralindia"       data-ibm="us-south">Hyderabad / Central India</option>
+  <option value="apac-osaka" data-msk="ap-northeast-3" data-eh="japanwest"          data-ibm="jp-tok">Osaka / Japan West</option>
+  <option value="apac-mel"   data-msk="ap-southeast-4" data-eh="australiasoutheast" data-ibm="au-syd">Melbourne / Australia Southeast</option>
+  <option value="apac-jakarta" data-msk="ap-southeast-3" data-eh="indonesiacentral" data-ibm="jp-tok">Jakarta / Indonesia</option>
+</optgroup>
+            <optgroup label="United States">
+  <option value="us-east"    data-msk="us-east-1"    data-eh="eastus"         data-ibm="us-east">US East — N. Virginia</option>
+  <option value="us-east-2"  data-msk="us-east-2"    data-eh="eastus2"        data-ibm="us-east">US East 2 — Ohio</option>
+  <option value="us-west"    data-msk="us-west-2"    data-eh="westus2"        data-ibm="us-south">US West — Oregon</option>
+  <option value="us-west-1"  data-msk="us-west-1"    data-eh="westus"         data-ibm="us-south">US West — N. California</option>
+  <option value="us-central" data-msk="us-east-1"    data-eh="centralus"      data-ibm="us-east">US Central</option>
+  <option value="us-south-c" data-msk="us-east-1"    data-eh="southcentralus" data-ibm="us-south">US South Central</option>
+</optgroup>
+            <optgroup label="Europe">
+  <option value="eu-ireland"   data-msk="eu-west-1"    data-eh="northeurope"         data-ibm="eu-gb">Ireland / North Europe</option>
+  <option value="eu-london"    data-msk="eu-west-2"    data-eh="uksouth"              data-ibm="eu-gb">London / UK South</option>
+  <option value="eu-frankfurt" data-msk="eu-central-1" data-eh="germanywestcentral"   data-ibm="eu-de">Frankfurt / Germany West Central</option>
+  <option value="eu-sweden"    data-msk="eu-north-1"   data-eh="swedencentral"        data-ibm="eu-de">Sweden Central</option>
+  <option value="eu-norway"    data-msk="eu-west-1"    data-eh="norwayeast"           data-ibm="eu-gb">Norway East</option>
+  <option value="eu-poland"    data-msk="eu-central-1" data-eh="polandcentral"        data-ibm="eu-de">Poland Central</option>
+  <option value="eu-switzerland" data-msk="eu-central-1" data-eh="switzerlandnorth"  data-ibm="eu-de">Switzerland North</option>
+  <option value="eu-france"    data-msk="eu-west-3"    data-eh="francecentral"        data-ibm="eu-gb">France Central</option>
+  <option value="eu-spain"     data-msk="eu-south-1"   data-eh="spaincentral"         data-ibm="eu-de">Spain Central</option>
+</optgroup>
+            <optgroup label="Canada">
+              <option value="ca-central" data-msk="ca-central-1" data-eh="canadacentral" data-ibm="us-east">Canada Central</option>
+            </optgroup>
+            <optgroup label="South America">
+              <option value="sa-brazil" data-msk="sa-east-1" data-eh="brazilsouth" data-ibm="us-south">São Paulo / Brazil South</option>
+            </optgroup>
+            <optgroup label="Middle East">
+  <option value="me-uae"   data-msk="me-central-1" data-eh="uaenorth"    data-ibm="us-south">UAE North</option>
+  <option value="me-qatar" data-msk="me-south-1"   data-eh="qatarcentral" data-ibm="us-south">Qatar Central</option>
+  <option value="me-israel" data-msk="il-central-1" data-eh="israelcentral" data-ibm="eu-de">Israel Central</option>
+</optgroup>
+<optgroup label="Africa">
+  <option value="af-south" data-msk="af-south-1" data-eh="southafricanorth" data-ibm="eu-gb">South Africa North</option>
+</optgroup>
+          </select>
+          <div style="font-size:10px;color:var(--faint);margin-top:4px">Each provider uses the closest available region.</div>
+        </div>
+ 
+        <hr class="fdiv"/>
+ 
+        <!-- Throughput -->
+        <div>
+          <div class="flabel">Throughput (Ingress) <span class="fval" id="tp-display">100 MBps</span></div>
+          <input type="range" id="tp-slider" min="1" max="250" value="100" oninput="setTp(this.value,true)"/>
+          <div class="qrow">
+  <button class="qbtn" onclick="setTp(5)">5</button>
+  <button class="qbtn" onclick="setTp(10)">10</button>
+  <button class="qbtn" onclick="setTp(25)">25</button>
+  <button class="qbtn" onclick="setTp(50)">50</button>
+  <button class="qbtn active" onclick="setTp(100)">100</button>
+  <button class="qbtn" onclick="setTp(150)">150</button>
+  <button class="qbtn" onclick="setTp(200)">200</button>
+</div>
+<div class="nrow">
+  <input class="ninp" type="number" id="tp-num" min="1" max="250" value="100"
+    oninput="setTp(this.value)"/>
+  <span class="nunit">MBps</span>
+</div>
+        </div>
+ 
+        <!-- Retention -->
+        <div>
+          <div class="flabel">Retention <span class="fval" id="ret-display">3 days</span></div>
+          <input type="range" id="ret-slider" min="1" max="30" value="3" oninput="setRet(this.value,true)"/>
+          <div class="nrow">
+            <input class="ninp" type="number" id="ret-num" min="1" max="365" value="3" oninput="setRet(this.value)"/>
+            <span class="nunit">days</span>
+          </div>
+        </div>
+ 
+        <!-- Replicas -->
+<div>
+  <div class="flabel">Replicas <span class="fval" id="rep-display">3</span></div>
+  <input type="range" id="rep-slider" min="1" max="5" value="3" oninput="setRep(this.value, true)"/>
+  <div class="reprow" style="margin-top:7px">
+    <button class="repbtn" onclick="setRep(1)">1</button>
+    <button class="repbtn" onclick="setRep(2)">2</button>
+    <button class="repbtn active" onclick="setRep(3)">3</button>
+    <button class="repbtn" onclick="setRep(4)">4</button>
+    <button class="repbtn" onclick="setRep(5)">5</button>
+  </div>
+  <div class="nrow">
+    <input class="ninp" type="number" id="rep-num" min="1" max="5" value="3" oninput="setRep(this.value)"/>
+    <span class="nunit">replicas</span>
+  </div>
+</div>
+ 
+        <hr class="fdiv"/>
+ 
+        <!-- Cloud (Condense only) -->
+        <div>
+          <div class="flabel">Cloud Provider</div>
+          <div class="cloudrow">
+            <button class="cloudbtn active" onclick="setCloud('aws')">AWS</button>
+            <button class="cloudbtn" onclick="setCloud('gcp')">GCP</button>
+            <button class="cloudbtn" onclick="setCloud('azure')">Azure</button>
+          </div>
+        </div>
+ 
+        <hr class="fdiv"/>
+ 
+        <button class="estimate-btn" id="estimate-btn" onclick="estimateAll()">
+          <div class="btn-spin"></div>
+          <span class="btn-label">Estimate Prices</span>
+        </button>
+ 
+      </div>
+    </div>
+ 
+    <!-- RESULTS -->
+    <div class="results">
+ 
+      <!-- BAR CHART -->
+      <div class="chart-card">
+        <div class="card-title">Monthly Cost Comparison</div>
+        <div class="bar-chart" id="bar-chart">
+          <div style="text-align:center;padding:20px 0;color:var(--faint);font-size:12px">
+            Configure inputs and click <strong style="color:var(--blue-lt)">Estimate Prices</strong> to compare
+          </div>
+        </div>
+      </div>
+ 
+      <!-- CONDENSE ACCORDION -->
+      <div class="accordion" id="acc-condense">
+        <div class="acc-header" onclick="toggleAcc('condense')">
+          <div class="acc-stripe" style="background:var(--condense)"></div>
+          <div class="acc-info">
+            <div class="acc-name">Condense — Managed Kafka</div>
+            <div class="acc-sub" id="condense-sub">Benchmark infra table + tiered license</div>
+          </div>
+          <div class="acc-right">
+            <div class="acc-total pending" id="condense-total">Click Estimate</div>
+            <svg class="acc-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+          </div>
+        </div>
+        <div class="acc-body" id="body-condense">
+          <div class="inner">
+            <div class="sec-label">Selected Infrastructure</div>
+            <div class="drow"><div class="drow-l"><div class="drow-name">Machine Type</div></div><div class="drow-val accent" id="c-machine">—</div></div>
+            <div class="drow"><div class="drow-l"><div class="drow-name">Cluster size</div></div><div class="drow-val" id="c-nodes">—</div></div>
+            <div class="drow"><div class="drow-l"><div class="drow-name">Rate per node / month</div></div><div class="drow-val" id="c-noderate">—</div></div>
+          </div>
+          <div class="inner">
+            <div class="sec-label">Cost Breakdown</div>
+            <div class="drow"><div class="drow-l"><div class="drow-name">Compute (Kafka Nodes)</div><div class="drow-calc" id="c-compute-calc">—</div></div><div class="drow-val" id="c-compute">—</div></div>
+            <div class="drow"><div class="drow-l"><div class="drow-name">Streaming Compute (1:1)</div><div class="drow-calc">Same as Kafka compute</div></div><div class="drow-val" id="c-stream">—</div></div>
+            <div class="drow"><div class="drow-l"><div class="drow-name">Disk Storage</div><div class="drow-calc" id="c-disk-calc">—</div></div><div class="drow-val" id="c-disk">—</div></div>
+            <div class="drow"><div class="drow-l"><div class="drow-name">Cross-zone Replication</div><div class="drow-calc" id="c-rep-calc">—</div></div><div class="drow-val" id="c-rep">—</div></div>
+            <div class="drow"><div class="drow-l"><div class="drow-name">Condense License Fee</div><div class="drow-calc" id="c-lic-calc">—</div></div><div class="drow-val" id="c-lic">—</div></div>
+          </div>
+          <div class="inner">
+            <div class="sec-label">Cost Distribution</div>
+            <div class="dist-track" id="c-dist-track"></div>
+            <div class="dist-legend" id="c-dist-legend"></div>
+          </div>
+          <div class="inner">
+            <div class="sec-label">Assumptions</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:3px 14px">
+              <div class="drow-calc" style="color:var(--muted);padding:2px 0">1. 1000 partitions per broker</div>
+              <div class="drow-calc" style="color:var(--muted);padding:2px 0">2. Ingress : Egress = 1:1</div>
+              <div class="drow-calc" style="color:var(--muted);padding:2px 0">3. Standard mode (non-Evaluation)</div>
+              <div class="drow-calc" style="color:var(--muted);padding:2px 0">4. Kafka : Streaming compute = 1:1</div>
+              <div class="drow-calc" style="color:var(--muted);padding:2px 0">5. HA config, non-DR</div>
+              <div class="drow-calc" style="color:var(--muted);padding:2px 0">6. Connector infra not included</div>
+            </div>
+          </div>
+        </div>
+      </div>
+ 
+      <!-- MSK ACCORDION -->
+      <div class="accordion" id="acc-msk">
+        <div class="acc-header" onclick="toggleAcc('msk')">
+          <div class="acc-stripe" style="background:var(--msk)"></div>
+          <div class="acc-info">
+            <div class="acc-name">AWS MSK Serverless</div>
+            <div class="acc-sub" id="msk-sub">Verified rates from AWS MSK pricing page · click Estimate to load</div>
+          </div>
+          <div class="acc-right">
+            <div class="acc-total pending" id="msk-total">Click Estimate</div>
+            <svg class="acc-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+          </div>
+        </div>
+        <div class="acc-body" id="body-msk">
+          <div class="inner">
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;">
+              <span class="status-chip idle" id="msk-chip"><span class="schip-dot"></span><span id="msk-chip-msg">Not calculated yet</span></span>
+              <div style="font-size:11px;color:var(--muted)">Region: <span id="msk-region-lbl" style="color:var(--text)">—</span></div>
+            </div>
+          </div>
+          <div class="ppills" id="msk-ppills" style="display:none">
+            <div class="ppill"><div class="ppill-label">Cluster/hr</div><div class="ppill-val" id="mp-cluster">—</div></div>
+            <div class="ppill"><div class="ppill-label">Partition/hr (1K)</div><div class="ppill-val" id="mp-part">—</div></div>
+            <div class="ppill"><div class="ppill-label">Storage/GiB-mo</div><div class="ppill-val" id="mp-stor">—</div></div>
+            <div class="ppill"><div class="ppill-label">Data in/GiB</div><div class="ppill-val" id="mp-in">—</div></div>
+            <div class="ppill"><div class="ppill-label">Data out/GiB</div><div class="ppill-val" id="mp-out">—</div></div>
+          </div>
+          <div class="inner">
+            <div class="sec-label">How MSK Serverless is priced</div>
+            <div style="font-size:12px;color:var(--muted);line-height:1.75">
+              Charges per <strong style="color:var(--text)">cluster-hour</strong>, per <strong style="color:var(--text)">partition-hour</strong> (1,000 partitions), per GiB <strong style="color:var(--text)">storage-month</strong>, per GiB <strong style="color:var(--text)">data in</strong>, and per GiB <strong style="color:var(--text)">data out</strong>. Rates verified from AWS MSK pricing page. Regional multipliers applied where known.
+            </div>
+          </div>
+          <div class="inner">
+            <div class="sec-label">Cost Breakdown</div>
+            <div class="drow"><div class="drow-l"><div class="drow-name">Cluster hours (730 hrs/mo)</div><div class="drow-calc" id="m-cluster-calc">—</div></div><div class="drow-val" id="m-cluster">—</div></div>
+            <div class="drow"><div class="drow-l"><div class="drow-name">Partition hours (1,000 partitions)</div><div class="drow-calc" id="m-part-calc">—</div></div><div class="drow-val" id="m-part">—</div></div>
+            <div class="drow"><div class="drow-l"><div class="drow-name">Storage</div><div class="drow-calc" id="m-stor-calc">—</div></div><div class="drow-val" id="m-stor">—</div></div>
+            <div class="drow"><div class="drow-l"><div class="drow-name">Data ingested</div><div class="drow-calc" id="m-in-calc">—</div></div><div class="drow-val" id="m-in">—</div></div>
+            <div class="drow"><div class="drow-l"><div class="drow-name">Data egressed (1:1 with ingress)</div><div class="drow-calc" id="m-out-calc">—</div></div><div class="drow-val" id="m-out">—</div></div>
+          </div>
+        </div>
+      </div>
+ 
+      <!-- AZURE EVENT HUBS ACCORDION -->
+      <div class="accordion" id="acc-eh">
+        <div class="acc-header" onclick="toggleAcc('eh')">
+          <div class="acc-stripe" style="background:var(--eh)"></div>
+          <div class="acc-info">
+            <div class="acc-name">Azure Event Hubs</div>
+            <div class="acc-sub" id="eh-sub">Live prices from Azure Retail Prices API · click Estimate to load</div>
+          </div>
+          <div class="acc-right">
+            <div class="acc-total pending" id="eh-total">Click Estimate</div>
+            <svg class="acc-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+          </div>
+        </div>
+        <div class="acc-body" id="body-eh">
+          <div class="inner">
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;">
+              <span class="status-chip idle" id="eh-chip"><span class="schip-dot"></span><span id="eh-chip-msg">Not fetched yet</span></span>
+              <div style="font-size:11px;color:var(--muted)">Region: <span id="eh-region-lbl" style="color:var(--text)">—</span></div>
+            </div>
+          </div>
+          <div class="ppills">
+            <div class="ppill"><div class="ppill-label" id="eh-unit-lbl">CU/hr</div><div class="ppill-val" id="eh-cu-pill">$8.768</div></div>
+            <div class="ppill"><div class="ppill-label">Overage/GB</div><div class="ppill-val" id="eh-ov-pill">$0.150</div></div>
+            <div class="ppill"><div class="ppill-label">Geo-repl/GB</div><div class="ppill-val" id="eh-geo-pill">$0.090</div></div>
+          </div>
+          <div class="inner">
+            <div class="sec-label">How Azure Event Hubs is priced</div>
+            <div style="font-size:12px;color:var(--muted);line-height:1.75">
+              <strong style="color:var(--text)">Dedicated:</strong> pay per Capacity Unit (CU). Each CU handles ~200 MB/s over a cluster of up to 20 CU. Includes 10 TB free storage per CU. Overage billed per GB.<br>
+          </div>
+          <div class="inner">
+            <div class="sec-label">Cost Breakdown</div>
+            <div class="drow"><div class="drow-l"><div class="drow-name" id="eh-cu-label">Capacity Units (CUs) — Primary</div><div class="drow-calc" id="eh-cu-calc">—</div></div><div class="drow-val" id="eh-cu-cost">—</div></div>
+            <div class="drow"><div class="drow-l"><div class="drow-name">Storage overage</div><div class="drow-calc" id="eh-ov-calc">—</div></div><div class="drow-val" id="eh-ov-cost">—</div></div>
+            <div class="drow"><div class="drow-l"><div class="drow-name">Secondary clusters (replicas)</div><div class="drow-calc" id="eh-sec-calc">—</div></div><div class="drow-val" id="eh-sec-cost">—</div></div>
+            <div class="drow"><div class="drow-l"><div class="drow-name">Geo-replication transfer</div><div class="drow-calc" id="eh-geo-calc">—</div></div><div class="drow-val" id="eh-geo-cost">—</div></div>
+            <div class="drow"><div class="drow-l"><div class="drow-name">Professional Direct Support</div><div class="drow-calc">fixed monthly</div></div><div class="drow-val">$1,000.00</div></div>
+          </div>
+        </div>
+      </div>
+ <!-- DIY KAFKA ACCORDION -->
+<div class="accordion" id="acc-diy">
+  <div class="acc-header" onclick="toggleAcc('diy')">
+    <div class="acc-stripe" style="background:var(--amber)"></div>
+    <div class="acc-info">
+      <div class="acc-name">DIY Kafka (Self-Managed)</div>
+      <div class="acc-sub" id="diy-sub">One-time setup + recurring infra & operations</div>
+    </div>
+    <div class="acc-right">
+      <div class="acc-total pending" id="diy-total">Click Estimate</div>
+      <svg class="acc-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+    </div>
+  </div>
+  <div class="acc-body" id="body-diy">
+    <div class="inner">
+      <div class="sec-label">One-Time Setup Costs</div>
+      <div class="drow"><div class="drow-l"><div class="drow-name">Setup of Kafka Ecosystem</div><div class="drow-calc">fixed one-time</div></div><div class="drow-val">$28,471.00</div></div>
+      <div class="drow"><div class="drow-l"><div class="drow-name">Logging & Monitoring Setup</div><div class="drow-calc">fixed one-time</div></div><div class="drow-val">$5,176.00</div></div>
+      <div class="drow"><div class="drow-l"><div class="drow-name" style="font-weight:600;color:var(--amber)">Total One-Time</div></div><div class="drow-val accent" id="diy-onetime-total">$33,647.00</div></div>
+    </div>
+    <div class="inner">
+      <div class="sec-label">Monthly Recurring Costs</div>
+      <div class="drow"><div class="drow-l"><div class="drow-name">Kafka Infra (Nodes + Disk + Replication)</div><div class="drow-calc" id="diy-infra-calc">—</div></div><div class="drow-val" id="diy-infra">—</div></div>
+      <div class="drow"><div class="drow-l"><div class="drow-name">Control Plane</div><div class="drow-calc" id="diy-cp-calc">—</div></div><div class="drow-val" id="diy-cp">—</div></div>
+      <div class="drow"><div class="drow-l"><div class="drow-name">Operations, Support & Maintenance</div><div class="drow-calc">fixed monthly</div></div><div class="drow-val">$12,800.00</div></div>
+      <div class="drow"><div class="drow-l"><div class="drow-name" style="font-weight:600;color:var(--amber)">Total Monthly Recurring</div></div><div class="drow-val accent" id="diy-monthly-total">—</div></div>
+    </div>
+    <div class="inner">
+      <div class="sec-label">Summary</div>
+      <div class="drow"><div class="drow-l"><div class="drow-name">One-Time Setup</div></div><div class="drow-val">$33,647.00</div></div>
+      <div class="drow"><div class="drow-l"><div class="drow-name">Monthly Recurring</div></div><div class="drow-val" id="diy-summary-monthly">—</div></div>
+      <div class="drow"><div class="drow-l"><div class="drow-name">First Year Total</div><div class="drow-calc">one-time + 12 × monthly</div></div><div class="drow-val accent" id="diy-year1">—</div></div>
+    </div>
+    <div class="inner">
+      <div class="sec-label">Assumptions</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:3px 14px">
+        <div class="drow-calc" style="color:var(--muted);padding:2px 0">1. Infra = Kafka nodes + disk + replication</div>
+        <div class="drow-calc" style="color:var(--muted);padding:2px 0">2. Control plane same as Condense</div>
+        <div class="drow-calc" style="color:var(--muted);padding:2px 0">3. Ops cost fixed at $12,800/mo</div>
+        <div class="drow-calc" style="color:var(--muted);padding:2px 0">4. No license fee for self-managed</div>
+      </div>
+    </div>
+  </div>
+</div>
+      <!-- IBM ACCORDION 
+      <div class="accordion" id="acc-ibm">
+        <div class="acc-header" onclick="toggleAcc('ibm')">
+          <div class="acc-stripe" style="background:var(--ibm)"></div>
+          <div class="acc-info">
+            <div class="acc-name">IBM Event Streams (Enterprise)</div>
+            <div class="acc-sub" id="ibm-sub">Verified rates · IBM Cloud Cost Estimator · $5,356.80/CU · 150 MB/s per CU</div>
+          </div>
+          <div class="acc-right">
+            <div class="acc-total pending" id="ibm-total">Click Estimate</div>
+            <svg class="acc-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+          </div>
+        </div>
+        <div class="acc-body" id="body-ibm">
+          <div class="inner">
+            <div style="font-size:11.5px;color:var(--muted)">Region: <span id="ibm-region-lbl" style="color:var(--text)">US South (Dallas)</span> · All IBM regions same price</div>
+          </div>
+          <div class="inner">
+            <div class="sec-label">Derived IBM Calculator Inputs</div>
+            <div class="ibm-grid">
+              <div class="ibm-box"><div class="ibm-box-label">Capacity Units</div><div class="ibm-box-val" id="ibm-cu-val">—</div><div class="ibm-box-sub">from throughput</div></div>
+              <div class="ibm-box"><div class="ibm-box-label">Extra Storage</div><div class="ibm-box-val" id="ibm-stor-val">—</div><div class="ibm-box-sub" id="ibm-stor-sub">above free tier</div></div>
+              <div class="ibm-box"><div class="ibm-box-label">Mirror CUs</div><div class="ibm-box-val" id="ibm-mirror-val">—</div><div class="ibm-box-sub">from replicas</div></div>
+              <div class="ibm-box"><div class="ibm-box-label">Outbound GB</div><div class="ibm-box-val" id="ibm-out-val">—</div><div class="ibm-box-sub">auto-calculated</div></div>
+            </div>
+          </div>
+          <div class="inner">
+            <div class="sec-label">How IBM Event Streams Enterprise is priced</div>
+            <div style="font-size:12px;color:var(--muted);line-height:1.75">
+              Input in <strong style="color:var(--text)">MBps</strong> → ÷150 MB/s per CU → ceiling = CU count (max 3). Each CU includes <strong style="color:var(--text)">2 TB free storage</strong>. Extra storage charged at <strong style="color:var(--text)">$0.652/TB/hr × 720 hrs</strong>. Mirror CUs = replicas (max 3). Outbound = GB/day ÷ 10 × 30 days × mirror CUs.
+            </div>
+          </div>
+          <div class="inner">
+            <div class="sec-label">Cost Breakdown</div>
+            <div class="drow"><div class="drow-l"><div class="drow-name">Throughput → CU derivation</div><div class="drow-calc" id="ibm-cu-calc">—</div></div><div class="drow-val" id="ibm-cu-cost">—</div></div>
+            <div class="drow"><div class="drow-l"><div class="drow-name">Base CU cost</div><div class="drow-calc" id="ibm-base-calc">—</div></div><div class="drow-val" id="ibm-base">—</div></div>
+            <div class="drow"><div class="drow-l"><div class="drow-name">Extra storage cost</div><div class="drow-calc" id="ibm-storcost-calc">—</div></div><div class="drow-val" id="ibm-storcost">—</div></div>
+            <div class="drow"><div class="drow-l"><div class="drow-name">Mirror CU cost</div><div class="drow-calc" id="ibm-mirrorcost-calc">—</div></div><div class="drow-val" id="ibm-mirrorcost">—</div></div>
+            <div class="drow"><div class="drow-l"><div class="drow-name">Outbound transfer cost</div><div class="drow-calc" id="ibm-outcost-calc">—</div></div><div class="drow-val" id="ibm-outcost">—</div></div>
+          </div>
+        </div>
+      </div>
+    -->
+    </div><!-- /results -->
+  </div><!-- /layout -->
+</div><!-- /page -->
+ 
+<script>
+// ═══════════════════════════════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════════════════════════════
+let tp = 100, ret = 3, rep = 3, cloud = 'aws', ehTier = 'dedicated';
+let ehCuPrice = 8.768, ehPuPrice = 1.541, ehOvPrice = 0.15, ehGeoPrice = 0.09;
+let mskPricing = null;
+let activeAcc = null;
+let estimated = false;
+ 
+// ═══════════════════════════════════════════════════════════════════════════
+// MSK SERVERLESS HARDCODED PRICES (verified from AWS pricing page)
+// Base rates from us-east-1; AP regions ~20% higher; EU regions ~10% higher
+// ═══════════════════════════════════════════════════════════════════════════
+const MSK_PRICES = {
+  // US
+  'us-east-1':      { clusterHour:0.75,  partitionHour:0.0015,  storagePGB:0.10,  dataInPGB:0.10,  dataOutPGB:0.05 },
+  'us-east-2':      { clusterHour:0.75,  partitionHour:0.0015,  storagePGB:0.10,  dataInPGB:0.10,  dataOutPGB:0.05 },
+  'us-west-2':      { clusterHour:0.75,  partitionHour:0.0015,  storagePGB:0.10,  dataInPGB:0.10,  dataOutPGB:0.05 },
+  // AP
+  'ap-south-1':     { clusterHour:0.90,  partitionHour:0.0018,  storagePGB:0.114, dataInPGB:0.116, dataOutPGB:0.058 },
+  'ap-south-2':     { clusterHour:0.90,  partitionHour:0.0018,  storagePGB:0.114, dataInPGB:0.116, dataOutPGB:0.058 },
+  'ap-southeast-1': { clusterHour:0.906, partitionHour:0.00181, storagePGB:0.114, dataInPGB:0.116, dataOutPGB:0.058 },
+  'ap-southeast-2': { clusterHour:0.906, partitionHour:0.00181, storagePGB:0.115, dataInPGB:0.117, dataOutPGB:0.059 },
+  'ap-northeast-1': { clusterHour:0.918, partitionHour:0.00184, storagePGB:0.114, dataInPGB:0.116, dataOutPGB:0.058 },
+  'ap-northeast-2': { clusterHour:0.888, partitionHour:0.00178, storagePGB:0.112, dataInPGB:0.112, dataOutPGB:0.056 },
+  'ap-east-1':      { clusterHour:0.95,  partitionHour:0.0019,  storagePGB:0.12,  dataInPGB:0.12,  dataOutPGB:0.06  },
+  // EU
+  'eu-west-1':      { clusterHour:0.825, partitionHour:0.00165, storagePGB:0.11,  dataInPGB:0.11,  dataOutPGB:0.055 },
+  'eu-west-2':      { clusterHour:0.855, partitionHour:0.00171, storagePGB:0.112, dataInPGB:0.112, dataOutPGB:0.056 },
+  'eu-central-1':   { clusterHour:0.848, partitionHour:0.0017,  storagePGB:0.111, dataInPGB:0.111, dataOutPGB:0.056 },
+  // Canada
+  'ca-central-1':   { clusterHour:0.825, partitionHour:0.00165, storagePGB:0.11,  dataInPGB:0.11,  dataOutPGB:0.055 },
+  // SA
+  'sa-east-1':      { clusterHour:1.125, partitionHour:0.00225, storagePGB:0.15,  dataInPGB:0.15,  dataOutPGB:0.075 },
+// Additional AP
+'ap-northeast-3': { clusterHour:0.918, partitionHour:0.00184, storagePGB:0.114, dataInPGB:0.116, dataOutPGB:0.058 },
+'ap-southeast-3': { clusterHour:0.906, partitionHour:0.00181, storagePGB:0.114, dataInPGB:0.116, dataOutPGB:0.058 },
+'ap-southeast-4': { clusterHour:0.906, partitionHour:0.00181, storagePGB:0.115, dataInPGB:0.117, dataOutPGB:0.059 },
+// EU additions
+'eu-north-1':  { clusterHour:0.825, partitionHour:0.00165, storagePGB:0.11,  dataInPGB:0.11,  dataOutPGB:0.055 },
+'eu-west-3':   { clusterHour:0.848, partitionHour:0.0017,  storagePGB:0.111, dataInPGB:0.111, dataOutPGB:0.056 },
+'eu-south-1':  { clusterHour:0.848, partitionHour:0.0017,  storagePGB:0.111, dataInPGB:0.111, dataOutPGB:0.056 },
+'us-west-1':   { clusterHour:0.75,  partitionHour:0.0015,  storagePGB:0.10,  dataInPGB:0.10,  dataOutPGB:0.05  },
+// Middle East
+'me-central-1':{ clusterHour:1.05,  partitionHour:0.0021,  storagePGB:0.13,  dataInPGB:0.13,  dataOutPGB:0.065 },
+'me-south-1':  { clusterHour:1.05,  partitionHour:0.0021,  storagePGB:0.13,  dataInPGB:0.13,  dataOutPGB:0.065 },
+'il-central-1':{ clusterHour:1.05,  partitionHour:0.0021,  storagePGB:0.13,  dataInPGB:0.13,  dataOutPGB:0.065 },
+// Africa
+'af-south-1':  { clusterHour:1.05,  partitionHour:0.0021,  storagePGB:0.13,  dataInPGB:0.13,  dataOutPGB:0.065 },};
+ 
+// ═══════════════════════════════════════════════════════════════════════════
+// CONDENSE DATA
+// ═══════════════════════════════════════════════════════════════════════════
+const C_BENCH = [
+  {minMBps:0,  maxMBps:5,   nodes:3,vCPU:2,ram:16,  aws:{type:"r6a.large",   rate:51.83},  gcp:{type:"n2d-highmem-2",rate:54},  azure:{type:"E2as v5",rate:55}},
+  {minMBps:5,  maxMBps:10,  nodes:4,vCPU:2,ram:16,  aws:{type:"r6a.large",   rate:51.83},  gcp:{type:"n2d-highmem-2",rate:54},  azure:{type:"E2as v5",rate:55}},
+  {minMBps:10, maxMBps:20,  nodes:5,vCPU:2,ram:16,  aws:{type:"r6a.large",   rate:51.83},  gcp:{type:"n2d-highmem-2",rate:54},  azure:{type:"E2as v5",rate:55}},
+  {minMBps:20, maxMBps:25,  nodes:3,vCPU:4,ram:32,  aws:{type:"r6a.xlarge",  rate:104.39}, gcp:{type:"n2d-highmem-4",rate:108}, azure:{type:"E4as v5",rate:112}},
+  {minMBps:25, maxMBps:50,  nodes:5,vCPU:4,ram:32,  aws:{type:"r6a.xlarge",  rate:104.39}, gcp:{type:"n2d-highmem-4",rate:108}, azure:{type:"E4as v5",rate:112}},
+  {minMBps:50, maxMBps:75,  nodes:7,vCPU:4,ram:32,  aws:{type:"r6a.xlarge",  rate:104.39}, gcp:{type:"n2d-highmem-4",rate:108}, azure:{type:"E4as v5",rate:112}},
+  {minMBps:75, maxMBps:100, nodes:9,vCPU:4,ram:32,  aws:{type:"r6a.xlarge",  rate:104.39}, gcp:{type:"n2d-highmem-4",rate:108}, azure:{type:"E4as v5",rate:112}},
+  {minMBps:100,maxMBps:125, nodes:6,vCPU:8,ram:64,  aws:{type:"r6a.2xlarge", rate:208.78}, gcp:{type:"n2d-highmem-8",rate:216}, azure:{type:"E8as v5",rate:224}},
+  {minMBps:125,maxMBps:150, nodes:7,vCPU:8,ram:64,  aws:{type:"r6a.2xlarge", rate:208.78}, gcp:{type:"n2d-highmem-8",rate:216}, azure:{type:"E8as v5",rate:224}},
+  {minMBps:150,maxMBps:200, nodes:8,vCPU:8,ram:64,  aws:{type:"r6a.2xlarge", rate:208.78}, gcp:{type:"n2d-highmem-8",rate:216}, azure:{type:"E8as v5",rate:224}},
+  {minMBps:200,maxMBps:250, nodes:9,vCPU:8,ram:64,  aws:{type:"r6a.2xlarge", rate:208.78}, gcp:{type:"n2d-highmem-8",rate:216}, azure:{type:"E8as v5",rate:224}},
+];
+const C_CTRL = {
+  aws:[
+    {label:'EKS Nodes "r6a.xlarge" w/ 100GB OS Disk',rate:104.39,qty:2},
+    {label:'Elastic Kubernetes Service',              rate:73,    qty:1},
+    {label:'Elastic Container Registry',              rate:10,    qty:1},
+    {label:'Instance "m6a.large" w/ 100GB OS Disk',  rate:40.55, qty:1},
+    {label:'2 Public Static IPs',                     rate:8.75,  qty:2},
+  ],
+  gcp:[
+    {label:'GKE Nodes "n2d-standard-4" w/ 100GB',rate:110,qty:2},
+    {label:'Google Kubernetes Engine',             rate:74, qty:1},
+    {label:'Artifact Registry',                    rate:10, qty:1},
+    {label:'Instance "n2d-standard-2" w/ 100GB',  rate:41, qty:1},
+    {label:'2 Static External IPs',                rate:5.8,qty:2},
+  ],
+  azure:[
+    {label:'AKS Nodes "D4as v5" w/ 100GB',         rate:115,qty:2},
+    {label:'Azure Kubernetes Service (Ctrl Plane)', rate:0,  qty:1},
+    {label:'Azure Container Registry (Basic)',       rate:5,  qty:1},
+    {label:'Instance "D2as v5" w/ 100GB',           rate:43, qty:1},
+    {label:'2 Public Static IPs',                   rate:7.3,qty:2},
+  ],
+};
+const C_DISK = {aws:93.39,gcp:102,azure:92};
+const C_TIERS = [
+  {tier:1,min:0,max:14400,rate:0.258},{tier:2,min:14401,max:17280,rate:0.25725},
+  {tier:3,min:17281,max:20160,rate:0.24874},{tier:4,min:20161,max:23040,rate:0.24201},
+  {tier:5,min:23041,max:25920,rate:0.23558},{tier:6,min:25921,max:28800,rate:0.23201},
+  {tier:7,min:28801,max:31680,rate:0.22915},{tier:8,min:31681,max:34560,rate:0.22682},
+  {tier:9,min:34561,max:37440,rate:0.22487},{tier:10,min:37441,max:40320,rate:0.22322},
+  {tier:11,min:40321,max:43200,rate:0.22181},{tier:12,min:43201,max:46080,rate:0.22059},
+  {tier:13,min:46081,max:48960,rate:0.21952},{tier:14,min:48961,max:51840,rate:0.21691},
+  {tier:15,min:51841,max:54720,rate:0.21616},{tier:16,min:54721,max:57600,rate:0.21549},
+  {tier:17,min:57601,max:60480,rate:0.21489},{tier:18,min:60481,max:63360,rate:0.21435},
+  {tier:19,min:63361,max:66240,rate:0.21385},{tier:20,min:66241,max:69120,rate:0.2134},
+  {tier:21,min:69121,max:72000,rate:0.21298},{tier:22,min:72001,max:74880,rate:0.21147},
+  {tier:23,min:74881,max:77760,rate:0.21116},{tier:24,min:77761,max:80640,rate:0.21088},
+  {tier:25,min:80641,max:83520,rate:0.21061},{tier:26,min:83521,max:86400,rate:0.21037},
+  {tier:27,min:86401,max:89280,rate:0.21014},{tier:28,min:89281,max:92160,rate:0.20992},
+  {tier:29,min:92161,max:95040,rate:0.20972},{tier:30,min:95041,max:97920,rate:0.20953},
+];
+ 
+// ═══════════════════════════════════════════════════════════════════════════
+// IBM DATA
+// ═══════════════════════════════════════════════════════════════════════════
+const IBM_BASE=5356.80, IBM_MIRROR=1065.60, IBM_OUT=0.087, IBM_STOR=0.652;
+const IBM_FREE_PER_CU=2, IBM_MBPS_PER_CU=150;
+// Extra storage options PER CU count (TB additional above free tier)
+const IBM_EXTRA_OPTS={1:[0,4,6,8,10], 2:[0,4,8], 3:[0,6]};
+ 
+// ═══════════════════════════════════════════════════════════════════════════
+// CALCULATION FUNCTIONS
+// ═══════════════════════════════════════════════════════════════════════════
+function calcCondense() {
+  const p = cloud;
+  const bench = C_BENCH.find(r => tp > r.minMBps && tp <= r.maxMBps) || C_BENCH[C_BENCH.length-1];
+  const {type:machineType,rate:machineRate} = bench[p];
+  const {nodes,vCPU,ram} = bench;
+  const kafkaNodes  = nodes * machineRate;
+  const diskTB = Math.ceil((tp * 86400 / 1024) * ret * rep / 1024);
+  const diskCost    = diskTB * C_DISK[p];
+  const interGB = Math.ceil(tp * 86400 * 30 / 1024);
+  const interCost = Math.ceil(interGB) * 0.02;
+  const cpCost      = C_CTRL[p].reduce((s,i) => s + i.rate * i.qty, 0);
+  const streamNodes = 0;
+  const eksVCPU = 2 * 4; // 2 EKS nodes, always r6a.xlarge = 4 vCPU
+  const vcpuHours   = (8 + nodes * vCPU) * 730;
+  const tier        = C_TIERS.find(t => vcpuHours >= t.min && vcpuHours <= t.max) || C_TIERS[C_TIERS.length-1];
+  const licenseFee  = vcpuHours * tier.rate;
+const total       = kafkaNodes + diskCost + interCost + cpCost + licenseFee;
+  return {machineType,machineRate,nodes,vCPU,ram,kafkaNodes,diskTB,diskCost,interGB:Math.round(interGB),interCost,cpCost,streamNodes,vcpuHours,tier,licenseFee,total};
+}
+ 
+function calcMsk(pricing) {
+  const HRS=730, PARTS=1000;
+  const clusterCost = HRS * pricing.clusterHour;
+  const partCost    = PARTS * HRS * pricing.partitionHour;
+  // Storage: tp MBps × 3600 sec × retention days / 1024 = GiB retained
+  const storGiB     = (tp * 3600 * ret * 24) / 1024;
+  const storCost    = storGiB * pricing.storagePGB;
+  // Data in/out per month: tp MBps × 3600 sec × 730 hrs / 1024 = GiB/month
+  const dinGiB      = (tp * 3600 * HRS) / 1024;
+  const dinCost     = dinGiB * pricing.dataInPGB;
+  const doutGiB     = (tp * 3600 * HRS) / 1024;
+  const doutCost    = doutGiB * pricing.dataOutPGB;
+  const total       = clusterCost + partCost + storCost + dinCost + doutCost;
+  return {clusterCost,partCost,storGiB,storCost,dinGiB,dinCost,doutGiB,doutCost,total};
+}
+ 
+// WITH THIS:
+// REPLACE WITH THIS:
+function calcEh() {
+  const cuTiers = [1, 2, 4, 8, 12, 16, 20];
+
+  // storedTB uses rep directly (= replicas count, same as doc5)
+  const storedTB = Math.ceil(tp * 86400 * ret * rep / 1024 / 1024);
+
+  // Pick CU from tier table: highest tier where cu×10 <= storedTB
+  let cuBill = 1;
+  for (const cu of cuTiers) {
+    if (cu * 10 <= storedTB) { cuBill = cu; } else { break; }
+  }
+
+  const freeTB    = cuBill * 10;
+  const freeGB    = freeTB * 1024;
+  const overageTB = Math.max(0, storedTB - freeTB);
+  const overageGB = overageTB * 1024;
+  const ovCost    = overageGB * ehOvPrice;
+  const cuCost    = cuBill * 730 * ehCuPrice;
+ const total     = cuCost + ovCost + 1000;
+
+  return {cuBill, unitLabel:'CU', freeGB, storedGB:storedTB*1024, overageGB,
+          ovCost, cuCost, secCost:0, geoCost:0, total,
+          reps:0, pricePerUnit:ehCuPrice, tbPerUnit:10, storedTB, freeTB, overageTB};
+}
+ 
+// ─────────────────────────────────────────────────────────────────────────
+// BUG FIX: tp is already in MBps (= MB/s). Do NOT divide by 8.
+// The standalone IBM calculator (App.jsx) uses throughputMbps directly ÷ 150.
+// The old code had `tpMBs = tp / 8` which treated input as Megabits/s —
+// that made storage and outbound 8× too low vs the IBM Cost Estimator.
+// ─────────────────────────────────────────────────────────────────────────
+function calcIbm() {
+  const tpMBs     = tp;  // ← FIXED: tp is MBps = MB/s, no division needed
+  const CUs       = Math.min(3, Math.max(1, Math.ceil(tpMBs / IBM_MBPS_PER_CU)));
+  const gbPerDay  = tpMBs * 86400 / 1024;
+  const storedTB  = gbPerDay * ret / 1024;
+  const freeTB    = CUs * IBM_FREE_PER_CU;
+  const extraNeeded = Math.max(0, storedTB - freeTB);
+  const opts      = IBM_EXTRA_OPTS[CUs] || [0];
+  const recExtra  = opts.find(o => o >= extraNeeded) ?? opts[opts.length-1];
+  const mirrorCUs = Math.min(3, rep);
+  const outGB     = Math.floor(gbPerDay / 10 * 30 * mirrorCUs);
+  const baseCost  = CUs * IBM_BASE;
+  const storCost  = recExtra * IBM_STOR * 720;
+  const mirrorCost= mirrorCUs * IBM_MIRROR;
+  const outCost   = outGB * IBM_OUT;
+  const total     = baseCost + storCost + mirrorCost + outCost;
+  return {CUs,tpMBs,gbPerDay,storedTB,freeTB,extraNeeded,recExtra,mirrorCUs,outGB,baseCost,storCost,mirrorCost,outCost,total};
+}
+function calcDiy() {
+  const c = calcCondense();
+  // Infra = kafka nodes + disk + replication (no license, no streaming)
+  const infraCost   = c.kafkaNodes + c.diskCost + c.interCost;
+  const cpCost      = c.cpCost;
+  const opsCost     = 12800;
+  const oneTime     = 33647;
+  const monthlyTotal = infraCost + cpCost + opsCost;
+  const year1Total  = oneTime + (monthlyTotal * 12);
+  return {infraCost, cpCost, opsCost, oneTime, monthlyTotal, year1Total,
+          infraCalc: `${c.nodes} nodes + ${c.diskTB}TB disk + replication`,
+          cpCalc: `control plane (${cloud.toUpperCase()})`};
+}
+ 
+// ═══════════════════════════════════════════════════════════════════════════
+// FORMAT HELPERS
+// ═══════════════════════════════════════════════════════════════════════════
+const $f = n => n == null ? '—' : '$' + (+n).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+const $n = n => n == null ? '—' : (+n).toLocaleString('en-US',{maximumFractionDigits:1});
+const set = (id, txt) => { const el = document.getElementById(id); if(el) el.textContent = txt; };
+ 
+// ═══════════════════════════════════════════════════════════════════════════
+// MAIN ESTIMATE FLOW
+// ═══════════════════════════════════════════════════════════════════════════
+async function estimateAll() {
+  const btn = document.getElementById('estimate-btn');
+  btn.disabled = true;
+  btn.classList.add('loading');
+  btn.querySelector('.btn-label').textContent = 'Estimating…';
+ 
+  const sel = document.getElementById('global-region');
+  const opt = sel.options[sel.selectedIndex];
+  const mskRegion = opt.getAttribute('data-msk');
+  const ehRegion  = opt.getAttribute('data-eh');
+  const ibmRegion = opt.getAttribute('data-ibm');
+ 
+  set('msk-region-lbl', mskRegion);
+  set('eh-region-lbl', ehRegion);
+  const ibmLabels = {'us-south':'US South (Dallas)','us-east':'US East (Washington)','eu-gb':'Europe (London)','eu-de':'Europe (Frankfurt)','jp-tok':'Asia Pacific (Tokyo)','au-syd':'Asia Pacific (Sydney)'};
+  set('ibm-region-lbl', ibmLabels[ibmRegion] || ibmRegion);
+ 
+  // ── Load MSK from hardcoded table (no API key needed) ──
+  // ── Load MSK from live AWS backend ──
+setChip('msk', 'loading', `Fetching MSK prices for ${mskRegion}…`);
+try {
+  const mskResp = await fetch(`/api/msk-prices?region=${mskRegion}`);
+  const mskData = await mskResp.json();
+  if (mskData.available) {
+    mskPricing = {
+      clusterHour:   mskData.clusterHour,
+      partitionHour: mskData.partitionHour,
+      storagePGB:    mskData.storagePGB,
+      dataInPGB:     mskData.dataInPGB,
+      dataOutPGB:    mskData.dataOutPGB,
+    };
+    setChip('msk', 'ok', `✓ Live AWS prices · ${mskRegion}`);
+  } else {
+    mskPricing = MSK_PRICES[mskRegion] || MSK_PRICES['us-east-1'];
+    setChip('msk', 'idle', `MSK Serverless unavailable in ${mskRegion} · using estimates`);
+  }
+} catch(e) {
+  mskPricing = MSK_PRICES[mskRegion] || MSK_PRICES['us-east-1'];
+  setChip('msk', 'err', `AWS API failed · using hardcoded rates`);
+}
+document.getElementById('msk-ppills').style.display = 'flex';
+set('mp-cluster', '$' + mskPricing.clusterHour.toFixed(4));
+set('mp-part',    '$' + mskPricing.partitionHour.toFixed(4));
+set('mp-stor',    '$' + mskPricing.storagePGB.toFixed(4));
+set('mp-in',      '$' + mskPricing.dataInPGB.toFixed(4));
+set('mp-out',     '$' + mskPricing.dataOutPGB.toFixed(4));
+ 
+  // ── Fetch Azure EH prices live from Azure Retail Prices API ──
+  setChip('eh', 'loading', `Fetching Azure prices for ${ehRegion}…`);
+  setAccTotal('eh', '…', 'loading-state');
+ 
+  const ehResult = await fetchEhPrices(ehRegion);
+  if (ehResult) {
+    ehCuPrice  = ehResult.cuPrice  || 8.768;
+    ehPuPrice  = ehResult.puPrice  || 1.541;
+    ehOvPrice  = ehResult.ovPrice  || 0.15;
+    ehGeoPrice = ehResult.geoPrice || 0.09;
+    set('eh-cu-pill',  '$' + ehCuPrice.toFixed(3));
+    set('eh-ov-pill',  '$' + ehOvPrice.toFixed(3));
+    set('eh-geo-pill', '$' + ehGeoPrice.toFixed(3));
+    set('eh-ded-lbl',  `$${ehCuPrice.toFixed(3)}/CU/hr · up to 20 CU`);
+    set('eh-prem-lbl', `$${ehPuPrice.toFixed(3)}/PU/hr · up to 16 PU`);
+    updateEhTierPill();
+    const src = ehResult.usedFallback
+      ? 'Default prices (Azure API unavailable for region)'
+      : `✓ Live prices · ${ehRegion}`;
+    setChip('eh', ehResult.usedFallback ? 'idle' : 'ok', src);
+  } else {
+    setChip('eh', 'err', 'Azure API failed — using default prices');
+  }
+ 
+  renderAll();
+  estimated = true;
+  btn.disabled = false;
+  btn.classList.remove('loading');
+  btn.querySelector('.btn-label').textContent = 'Re-estimate';
+}
+ 
+// ═══════════════════════════════════════════════════════════════════════════
+// AZURE RETAIL PRICES API — called directly from browser (CORS-enabled)
+// ═══════════════════════════════════════════════════════════════════════════
+async function fetchEhPrices(region) {
+  // Default fallback prices
+  const defaults = { cuPrice:8.768, puPrice:1.541, ovPrice:0.15, geoPrice:0.09, usedFallback:true };
+  try {
+    const filter = encodeURIComponent(
+      `serviceName eq 'Event Hubs' and armRegionName eq '${region}'`
+    );
+    const url = `/api/azure-prices?region=${region}`;
+    const resp = await fetch(url);
+    if (!resp.ok) return defaults;
+   const data = await resp.json();
+return {
+  cuPrice:      data.cuPrice  || defaults.cuPrice,
+  puPrice:      data.puPrice  || defaults.puPrice,
+  ovPrice:      data.ovPrice  || defaults.ovPrice,
+  geoPrice:     data.geoPrice || defaults.geoPrice,
+  usedFallback: data.usedFallback || false,
+};
+  } catch(e) {
+    console.warn('Azure Retail API error:', e);
+    return defaults;
+  }
+}
+ 
+// ═══════════════════════════════════════════════════════════════════════════
+// RENDER ALL
+// ═══════════════════════════════════════════════════════════════════════════
+function renderAll() {
+  renderCondense();
+  renderMsk();
+  renderEh();
+  // renderIbm();  // disabled
+  renderDiy();
+  renderBarChart(
+    calcCondense().total,
+    mskPricing ? calcMsk(mskPricing).total : null,
+    calcEh().total,
+    null,           // IBM disabled
+    calcDiy().monthlyTotal
+  );
+}
+ 
+function renderCondense() {
+  const r = calcCondense();
+  setAccTotal('condense', $f(r.total), '');
+  const lbl = {aws:'AWS (ap-south-1)',gcp:'GCP (asia-south2)',azure:'Azure (Mumbai)'}[cloud];
+  set('condense-sub', `Benchmark infra table + tiered license · ${lbl}`);
+  set('c-machine', r.machineType);
+  set('c-nodes', `${r.nodes} nodes × ${r.vCPU} vCPU × ${r.ram} GiB RAM`);
+  set('c-noderate', `$${r.machineRate.toFixed(2)} / node / mo`);
+  set('c-compute-calc', `${r.nodes} nodes × $${r.machineRate.toFixed(2)}`);
+  set('c-compute', $f(r.kafkaNodes));
+  set('c-stream', '$0.00 (not applicable)');
+  set('c-disk-calc', `${r.diskTB} TB × $${C_DISK[cloud].toFixed(2)} / TB-mo`);
+  set('c-disk', $f(r.diskCost));
+  set('c-rep-calc', `${r.interGB.toLocaleString()} GB × $0.02 / GB (one-way monthly)`);
+  set('c-rep', $f(r.interCost));
+  set('c-lic-calc', `${r.vcpuHours.toLocaleString()} vCPU-hrs × $${r.tier.rate.toFixed(5)} (Tier ${r.tier.tier})`);
+  set('c-lic', $f(r.licenseFee));
+  renderDist('c-dist-track','c-dist-legend',[
+  {label:'Compute',    val:r.kafkaNodes, color:'var(--condense)'},
+  {label:'Storage',    val:r.diskCost,   color:'var(--eh)'},
+  {label:'Replication',val:r.interCost,  color:'var(--ibm)'},
+  {label:'License',    val:r.licenseFee, color:'var(--amber)'},
+], r.total);
+}
+ 
+function renderMsk() {
+  if (!mskPricing) {
+    setAccTotal('msk', 'Awaiting', 'pending');
+    return;
+  }
+  const r = calcMsk(mskPricing);
+  setAccTotal('msk', $f(r.total), '');
+  const mskRegion = document.getElementById('msk-region-lbl').textContent;
+  set('msk-sub', `Verified rates · ${mskRegion}`);
+  set('m-cluster-calc', `730 hrs × $${mskPricing.clusterHour.toFixed(4)}`);
+  set('m-cluster', $f(r.clusterCost));
+  set('m-part-calc', `1,000 × 730 × $${mskPricing.partitionHour.toFixed(4)}`);
+  set('m-part', $f(r.partCost));
+  set('m-stor-calc', `${$n(r.storGiB)} GiB × $${mskPricing.storagePGB.toFixed(4)}`);
+  set('m-stor', $f(r.storCost));
+  set('m-in-calc', `${$n(r.dinGiB)} GiB × $${mskPricing.dataInPGB.toFixed(4)}`);
+  set('m-in', $f(r.dinCost));
+  set('m-out-calc', `${$n(r.doutGiB)} GiB × $${mskPricing.dataOutPGB.toFixed(4)}`);
+  set('m-out', $f(r.doutCost));
+}
+ 
+function renderEh() {
+  const r = calcEh();
+  setAccTotal('eh', $f(r.total), '');
+  const ehRegion = document.getElementById('eh-region-lbl').textContent;
+  set('eh-sub', `Live Azure prices · ${ehRegion} · ${ehTier === 'dedicated' ? 'Dedicated' : 'Premium'} tier`);
+  set('eh-cu-label', `${r.unitLabel}s — Primary cluster`);
+  // REPLACE the set lines in renderEh() with these:
+set('eh-cu-calc', `${r.cuBill} CU × 730 hrs × $${r.pricePerUnit.toFixed(3)}`);
+set('eh-cu-cost', $f(r.cuCost));
+set('eh-ov-calc', r.overageGB > 0 ? `${r.overageTB} TB overage × 1024 × $${ehOvPrice}` : 'within free tier');
+set('eh-ov-cost', $f(r.ovCost));
+set('eh-sec-calc', 'not applicable');
+set('eh-sec-cost', $f(0));
+set('eh-geo-calc', '—');
+set('eh-geo-cost', $f(0));
+}
+function renderIbm() {
+  const r = calcIbm();
+  setAccTotal('ibm', $f(r.total), '');
+  set('ibm-cu-val', `${r.CUs} CU${r.CUs!==1?'s':''}`);
+  set('ibm-stor-val', `${r.recExtra} TB`);
+  set('ibm-stor-sub', `${r.freeTB} TB free included`);
+  set('ibm-mirror-val', `${r.mirrorCUs}`);
+  set('ibm-out-val', r.outGB.toLocaleString());
+  // Show the correct formula: tp (MBps) ÷ 150 = CUs
+  set('ibm-cu-calc', `${tp} MBps ÷ 150 MB/s per CU = ${(tp/150).toFixed(2)} → ceil = ${r.CUs}`);
+  set('ibm-cu-cost', `${r.CUs} CU${r.CUs!==1?'s':''}`);
+  set('ibm-base-calc', `${r.CUs} × $5,356.80`);
+  set('ibm-base', $f(r.baseCost));
+  set('ibm-storcost-calc', r.recExtra > 0 ? `${r.recExtra} TB × $0.652 × 720 hrs` : 'no extra storage needed');
+  set('ibm-storcost', $f(r.storCost));
+  set('ibm-mirrorcost-calc', `${r.mirrorCUs} × $1,065.60`);
+  set('ibm-mirrorcost', $f(r.mirrorCost));
+  set('ibm-outcost-calc', `${r.outGB.toLocaleString()} GB × $0.087`);
+  set('ibm-outcost', $f(r.outCost));
+}
+function renderDiy() {
+  const r = calcDiy();
+  setAccTotal('diy', $f(r.monthlyTotal), '');
+set('diy-sub', `Monthly recurring · one-time setup $33,647 additional`);
+  set('diy-infra-calc', r.infraCalc);
+  set('diy-infra', $f(r.infraCost));
+  set('diy-cp-calc', r.cpCalc);
+  set('diy-cp', $f(r.cpCost));
+  set('diy-monthly-total', $f(r.monthlyTotal));
+  set('diy-summary-monthly', $f(r.monthlyTotal));
+  set('diy-year1', $f(r.year1Total));
+}
+
+function renderBarChart(condenseTotal, mskTotal, ehTotal, ibmTotal, diyTotal) {
+  const providers = [
+    {id:'condense',name:'Condense',        color:'var(--condense)',total:condenseTotal},
+    {id:'msk',     name:'AWS MSK',          color:'var(--msk)',    total:mskTotal},
+    {id:'eh',      name:'Azure Event Hubs', color:'var(--eh)',     total:ehTotal},
+    {id:'diy',     name:'DIY Kafka',        color:'var(--amber)',  total:diyTotal},
+  ];
+  const known = providers.filter(p => p.total != null).map(p => p.total);
+  const maxVal = Math.max(...known, 1);
+  const minVal = Math.min(...known);
+ 
+  document.getElementById('bar-chart').innerHTML = providers.map(p => {
+    const has = p.total != null;
+    const isLowest = has && p.total === minVal && known.length > 1;
+    const pct = has ? Math.max((p.total / maxVal) * 100, 0.5) : 0;
+    return `<div class="bar-row">
+      <div class="bar-label"><div class="bar-cdot" style="background:${p.color}"></div>${p.name}</div>
+      <div class="bar-track"><div class="bar-fill" style="width:${pct.toFixed(1)}%;background:${p.color};opacity:${has?1:.2}"></div></div>
+      <div class="bar-amount">
+        ${has
+          ? `<span>${$f(p.total)}</span>${isLowest?'<span class="lowest-pill">lowest</span>':''}`
+          : `<span class="pending-txt">awaiting estimate</span>`}
+      </div>
+    </div>`;
+  }).join('');
+}
+ 
+function renderDist(trackId, legendId, segs, total) {
+  document.getElementById(trackId).innerHTML =
+    segs.map(s => `<div class="dist-seg" style="flex:${s.val/total||.001};background:${s.color}"></div>`).join('');
+  document.getElementById(legendId).innerHTML =
+    segs.map(s => `<div class="dist-item"><div class="dist-dot" style="background:${s.color}"></div>${s.label}<span class="dist-pct">(${((s.val/total)*100).toFixed(0)}%)</span></div>`).join('');
+}
+ 
+// ═══════════════════════════════════════════════════════════════════════════
+// UI HELPERS
+// ═══════════════════════════════════════════════════════════════════════════
+function setAccTotal(id, text, cls) {
+  const el = document.getElementById(id + '-total');
+  if (!el) return;
+  el.textContent = text;
+  el.className = 'acc-total' + (cls ? ' ' + cls : '');
+}
+ 
+function setChip(id, type, msg) {
+  const chip = document.getElementById(id + '-chip');
+  if (!chip) return;
+  chip.className = 'status-chip ' + type;
+  const msgEl = document.getElementById(id + '-chip-msg');
+  if (msgEl) msgEl.textContent = msg;
+}
+ 
+function updateEhTierPill() {
+  const unitLbl = document.getElementById('eh-unit-lbl');
+  const cuPill  = document.getElementById('eh-cu-pill');
+  if (!unitLbl || !cuPill) return;
+  if (ehTier === 'dedicated') {
+    unitLbl.textContent = 'CU/hr';
+    cuPill.textContent  = '$' + ehCuPrice.toFixed(3);
+  } else {
+    unitLbl.textContent = 'PU/hr';
+    cuPill.textContent  = '$' + ehPuPrice.toFixed(3);
+  }
+}
+ 
+// ═══════════════════════════════════════════════════════════════════════════
+// INPUT HANDLERS
+// ═══════════════════════════════════════════════════════════════════════════
+function setTp(v, fromSlider=false) {
+  v = Math.max(1, Math.min(250, +v || 1));
+  tp = v;
+  if (!fromSlider) document.getElementById('tp-slider').value = v;
+  document.getElementById('tp-num').value = v;
+  document.getElementById('tp-display').textContent = v + ' MBps';
+  document.querySelectorAll('.qbtn').forEach(b => b.classList.toggle('active', +b.textContent === v));
+}
+ 
+function setRet(v, fromSlider=false) {
+  v = Math.max(1, Math.min(365, +v || 1));
+  ret = v;
+  if (!fromSlider) document.getElementById('ret-slider').value = Math.min(v, 30);
+  document.getElementById('ret-num').value = v;
+  document.getElementById('ret-display').textContent = v + (v === 1 ? ' day' : ' days');
+}
+ 
+function setRep(v, fromSlider=false) {
+  v = Math.max(1, Math.min(5, +v || 1));
+  rep = v;
+  if (!fromSlider) document.getElementById('rep-slider').value = v;
+  document.getElementById('rep-display').textContent = v;
+  document.querySelectorAll('.repbtn').forEach(b => b.classList.toggle('active', +b.textContent === v));
+}
+function setCloud(c) {
+  cloud = c;
+  document.querySelectorAll('.cloudbtn').forEach(b => b.classList.toggle('active', b.textContent.toLowerCase() === c));
+}
+ 
+function setEhTier(t) {
+  ehTier = t;
+  document.getElementById('eh-ded-btn').classList.toggle('active', t === 'dedicated');
+  updateEhTierPill();
+  if (estimated) renderEh();
+}
+ 
+function toggleAcc(id) {
+  if (activeAcc === id) {
+    document.getElementById('body-'+id).classList.remove('open');
+    document.querySelector('#acc-'+id+' .acc-chevron').classList.remove('open');
+    document.getElementById('acc-'+id).classList.remove('open');
+    activeAcc = null;
+  } else {
+    if (activeAcc) {
+      document.getElementById('body-'+activeAcc).classList.remove('open');
+      document.querySelector('#acc-'+activeAcc+' .acc-chevron').classList.remove('open');
+      document.getElementById('acc-'+activeAcc).classList.remove('open');
+    }
+    document.getElementById('body-'+id).classList.add('open');
+    document.querySelector('#acc-'+id+' .acc-chevron').classList.add('open');
+    document.getElementById('acc-'+id).classList.add('open');
+    activeAcc = id;
+  }
+}
+</script>
+</body>
+</html>
+ 

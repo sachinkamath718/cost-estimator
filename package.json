@@ -1,0 +1,19 @@
+{
+  "name": "cost-estimator",
+  "version": "1.0.0",
+  "description": "Kafka Pricing Calculator",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@aws-sdk/client-pricing": "^3.1038.0",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "node-fetch": "^2.7.0"
+  }
+}
