@@ -107,6 +107,64 @@ app.get("/api/azure-prices", async (req, res) => {
   }
 });
 
+// ── Redpanda Cloud Pricing ────────────────────────────────────────────────────
+const RP_RATES = {
+  "us-east-1":      { label: "N. Virginia",  clusterHr: 0.10,  partitionHr: 0.0015, gbWritten: 0.045,  gbRead: 0.04,   gbMonthRet: 0.09   },
+  "us-west-2":      { label: "Oregon",       clusterHr: 0.10,  partitionHr: 0.0015, gbWritten: 0.045,  gbRead: 0.04,   gbMonthRet: 0.09   },
+  "eu-central-1":   { label: "Frankfurt",    clusterHr: 0.12,  partitionHr: 0.0018, gbWritten: 0.054,  gbRead: 0.048,  gbMonthRet: 0.1053 },
+  "eu-west-2":      { label: "London",       clusterHr: 0.198, partitionHr: 0.003,  gbWritten: 0.0891, gbRead: 0.0792, gbMonthRet: 0.1773 },
+  "ap-south-1":     { label: "Mumbai",       clusterHr: 0.066, partitionHr: 0.001,  gbWritten: 0.03,   gbRead: 0.026,  gbMonthRet: 0.0594 },
+  "ap-southeast-1": { label: "Singapore",    clusterHr: 0.125, partitionHr: 0.0019, gbWritten: 0.0563, gbRead: 0.05,   gbMonthRet: 0.1125 },
+  "ap-northeast-1": { label: "Tokyo",        clusterHr: 0.129, partitionHr: 0.0019, gbWritten: 0.0581, gbRead: 0.0516, gbMonthRet: 0.1161 },
+};
+const RP_FALLBACK_REGION = "eu-west-2"; // most expensive — safe upper bound
+const RP_HOURS = 730, RP_MB_PER_GB = 1000, RP_PARTITIONS = 1000;
+const RP_PL_HOURLY = 0.05, RP_PL_DATA = 0.02;
+
+function rpMbpsToGb(mbps) { return (mbps * 3600 * RP_HOURS) / RP_MB_PER_GB; }
+
+app.post("/api/redpanda-calculate", (req, res) => {
+  const { region, throughput, retention, replicas } = req.body;
+  const usedFallback = !RP_RATES[region];
+  const effectiveRegion = RP_RATES[region] ? region : RP_FALLBACK_REGION;
+  const r = RP_RATES[effectiveRegion];
+
+  const writeMBps = parseFloat(throughput);
+  const readMBps  = writeMBps;
+  const totalMBps = writeMBps + readMBps;
+  const gbWrittenPerMonth = rpMbpsToGb(writeMBps);
+  const gbReadPerMonth    = rpMbpsToGb(readMBps);
+  const gbWrittenBilled   = gbWrittenPerMonth * replicas;
+  const gbPerDay          = (writeMBps * 3600 * 24) / RP_MB_PER_GB;
+  const gbMonthStored     = gbPerDay * retention * replicas;
+  const totalGbPerMonth   = rpMbpsToGb(totalMBps);
+
+  const clusterCost   = r.clusterHr   * RP_HOURS;
+  const partitionCost = r.partitionHr * RP_PARTITIONS * RP_HOURS;
+  const writeCost     = r.gbWritten   * gbWrittenBilled;
+  const readCost      = r.gbRead      * gbReadPerMonth;
+  const retentionCost = r.gbMonthRet  * gbMonthStored;
+  const plUptimeCost  = RP_PL_HOURLY  * RP_HOURS;
+  const plDataCost    = RP_PL_DATA    * totalGbPerMonth;
+  const privatelinkCost = plUptimeCost + plDataCost;
+  const total = clusterCost + partitionCost + writeCost + readCost + retentionCost + privatelinkCost;
+
+  res.json({
+    region: effectiveRegion, regionLabel: r.label,
+    usedFallback, requestedRegion: region,
+    rates: { clusterHr: r.clusterHr, partitionHr: r.partitionHr, gbWritten: r.gbWritten, gbRead: r.gbRead, gbMonthRet: r.gbMonthRet },
+    breakdown: [
+      { name: "Cluster uptime",   detail: `$${r.clusterHr}/hr × ${RP_HOURS} hrs`,                                               amount: +clusterCost.toFixed(2) },
+      { name: "Partition hours",  detail: `$${r.partitionHr}/partition/hr × ${RP_PARTITIONS} × ${RP_HOURS} hrs`,               amount: +partitionCost.toFixed(2) },
+      { name: "Data written",     detail: `$${r.gbWritten}/GB × ${gbWrittenBilled.toFixed(2)} GB (×${replicas} replicas)`,      amount: +writeCost.toFixed(2) },
+      { name: "Data read",        detail: `$${r.gbRead}/GB × ${gbReadPerMonth.toFixed(2)} GB`,                                  amount: +readCost.toFixed(2) },
+      { name: "Retention storage",detail: `$${r.gbMonthRet}/GB-month × ${gbMonthStored.toFixed(2)} GB`,                        amount: +retentionCost.toFixed(2) },
+      { name: "PrivateLink",      detail: `$${plUptimeCost.toFixed(2)} uptime + $${plDataCost.toFixed(2)} data`,               amount: +privatelinkCost.toFixed(2) },
+    ],
+    total: +total.toFixed(2),
+  });
+});
+
 // ── Health check ──────────────────────────────────────────────────────────────
 app.get("/api/health", (req, res) => {
   res.json({

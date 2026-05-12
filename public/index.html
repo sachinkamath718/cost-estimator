@@ -1,4 +1,3 @@
-
 <!DOCTYPE html> <html lang="en"> <head> <meta charset="UTF-8"/> <meta name="viewport" content="width=device-width,initial-scale=1"/> <title>Kafka Pricing — Zeliot</title> <link rel="preconnect" href="https://fonts.googleapis.com"/> <link href="https://fonts.googleapis.com/css2?family=Space+Gr
 
 <!DOCTYPE html>
@@ -30,6 +29,7 @@
   --msk:      #ff9900;
   --eh:       #0ea5e9;
   --ibm:      #a78bfa;
+  --rp:       #e5484d;
   --sans: 'Space Grotesk', sans-serif;
   --mono: 'JetBrains Mono', monospace;
   --r: 10px;
@@ -201,7 +201,7 @@ input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.2)}
 <div class="page">
   <div class="page-head">
     <h1>Kafka <span>Pricing</span> Calculator</h1>
-    <p>Compare monthly costs across Condense, AWS MSK Serverless, Azure Event Hubs, and IBM Event Streams. Configure your requirements and click <strong>Estimate Prices</strong>.</p>
+    <p>Compare monthly costs across Condense, AWS MSK Serverless, Azure Event Hubs, Redpanda Cloud, and DIY Kafka. Configure your requirements and click <strong>Estimate Prices</strong>.</p>
   </div>
  
   <div class="layout">
@@ -528,7 +528,53 @@ input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.2)}
     </div>
   </div>
 </div>
-      <!-- IBM ACCORDION 
+      <!-- REDPANDA CLOUD ACCORDION -->
+      <div class="accordion" id="acc-rp">
+        <div class="acc-header" onclick="toggleAcc('rp')">
+          <div class="acc-stripe" style="background:var(--rp)"></div>
+          <div class="acc-info">
+            <div class="acc-name">Redpanda Cloud (Serverless)</div>
+            <div class="acc-sub" id="rp-sub">Click Estimate to calculate Redpanda Cloud costs</div>
+          </div>
+          <div class="acc-right">
+            <div class="acc-total pending" id="rp-total">Click Estimate</div>
+            <svg class="acc-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+          </div>
+        </div>
+        <div class="acc-body" id="body-rp">
+          <div class="inner">
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;">
+              <span class="status-chip idle" id="rp-chip"><span class="schip-dot"></span><span id="rp-chip-msg">Not calculated yet</span></span>
+              <div style="font-size:11px;color:var(--muted)">Region: <span id="rp-region-lbl" style="color:var(--text)">—</span></div>
+            </div>
+          </div>
+          <div id="rp-fallback-note" style="display:none;padding:8px 18px;background:rgba(229,72,77,0.08);border-bottom:1px solid rgba(229,72,77,0.2);">
+            <div style="font-size:11.5px;color:var(--rp);line-height:1.6;">
+              ⚠️ <strong>Region not directly supported by Redpanda Cloud.</strong>
+              Prices shown use <strong>eu-west-2 (London)</strong> — the most expensive available region — as a conservative upper bound.
+              Actual pricing may be lower if deploying via a Redpanda-supported region.
+            </div>
+          </div>
+          <div class="ppills" id="rp-ppills" style="display:none">
+            <div class="ppill"><div class="ppill-label">Cluster/hr</div><div class="ppill-val" id="rp-p-cluster">—</div></div>
+            <div class="ppill"><div class="ppill-label">Partition/hr (1K)</div><div class="ppill-val" id="rp-p-part">—</div></div>
+            <div class="ppill"><div class="ppill-label">GB written</div><div class="ppill-val" id="rp-p-write">—</div></div>
+            <div class="ppill"><div class="ppill-label">GB read</div><div class="ppill-val" id="rp-p-read">—</div></div>
+            <div class="ppill"><div class="ppill-label">GB-month ret.</div><div class="ppill-val" id="rp-p-ret">—</div></div>
+          </div>
+          <div class="inner">
+            <div class="sec-label">How Redpanda Cloud is priced</div>
+            <div style="font-size:12px;color:var(--muted);line-height:1.75">
+              Charges per <strong style="color:var(--text)">cluster-hour</strong>, per <strong style="color:var(--text)">partition-hour</strong> (1,000 partitions), per GB <strong style="color:var(--text)">written</strong> (×replicas), per GB <strong style="color:var(--text)">read</strong>, per GB-month <strong style="color:var(--text)">stored</strong>, plus a <strong style="color:var(--text)">PrivateLink</strong> charge ($0.05/hr + $0.02/GB). Uses decimal GB (1000 MB = 1 GB) and 730 hrs/month.
+            </div>
+          </div>
+          <div class="inner">
+            <div class="sec-label">Cost Breakdown</div>
+            <div id="rp-breakdown-rows"></div>
+          </div>
+        </div>
+      </div>
+ 
       <div class="accordion" id="acc-ibm">
         <div class="acc-header" onclick="toggleAcc('ibm')">
           <div class="acc-stripe" style="background:var(--ibm)"></div>
@@ -582,6 +628,7 @@ input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.2)}
 let tp = 100, ret = 3, rep = 3, cloud = 'aws', ehTier = 'dedicated';
 let ehCuPrice = 8.768, ehPuPrice = 1.541, ehOvPrice = 0.15, ehGeoPrice = 0.09;
 let mskPricing = null;
+let rpResult = null;
 let activeAcc = null;
 let estimated = false;
  
@@ -877,6 +924,40 @@ set('mp-out',     '$' + mskPricing.dataOutPGB.toFixed(4));
     setChip('eh', 'err', 'Azure API failed — using default prices');
   }
  
+  const RP_SUPPORTED = new Set(['us-east-1','us-west-2','eu-central-1','eu-west-2','ap-south-1','ap-southeast-1','ap-northeast-1']);
+  const rpRegion = RP_SUPPORTED.has(mskRegion) ? mskRegion : 'eu-west-2';
+  set('rp-region-lbl', rpRegion);
+
+  // ── Fetch Redpanda Cloud prices ──
+  setChip('rp', 'loading', `Calculating Redpanda prices for ${rpRegion}…`);
+  try {
+    const rpResp = await fetch('/api/redpanda-calculate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ region: mskRegion, throughput: tp, retention: ret, replicas: rep }),
+    });
+    rpResult = await rpResp.json();
+    const note = document.getElementById('rp-fallback-note');
+    if (rpResult.usedFallback) {
+      note.style.display = 'block';
+      setChip('rp', 'idle', `⚠ Region not in Redpanda · using eu-west-2 (London) — most expensive`);
+      set('rp-region-lbl', `eu-west-2 (London) [fallback for ${mskRegion}]`);
+    } else {
+      note.style.display = 'none';
+      setChip('rp', 'ok', `✓ Redpanda Cloud · ${rpResult.regionLabel}`);
+    }
+    document.getElementById('rp-ppills').style.display = 'flex';
+    const rates = rpResult.rates;
+    set('rp-p-cluster', '$' + rates.clusterHr.toFixed(4));
+    set('rp-p-part',    '$' + rates.partitionHr.toFixed(4));
+    set('rp-p-write',   '$' + rates.gbWritten.toFixed(4));
+    set('rp-p-read',    '$' + rates.gbRead.toFixed(4));
+    set('rp-p-ret',     '$' + rates.gbMonthRet.toFixed(4));
+  } catch(e) {
+    setChip('rp', 'err', 'Redpanda API failed');
+    rpResult = null;
+  }
+
   renderAll();
   estimated = true;
   btn.disabled = false;
@@ -920,12 +1001,14 @@ function renderAll() {
   renderEh();
   // renderIbm();  // disabled
   renderDiy();
+  renderRedpanda();
   renderBarChart(
     calcCondense().total,
     mskPricing ? calcMsk(mskPricing).total : null,
     calcEh().total,
     null,           // IBM disabled
-    calcDiy().monthlyTotal
+    calcDiy().monthlyTotal,
+    rpResult ? rpResult.total : null
   );
 }
  
@@ -1024,11 +1107,31 @@ set('diy-sub', `Monthly recurring · one-time setup $33,647 additional`);
   set('diy-year1', $f(r.year1Total));
 }
 
-function renderBarChart(condenseTotal, mskTotal, ehTotal, ibmTotal, diyTotal) {
+function renderRedpanda() {
+  if (!rpResult) { setAccTotal('rp', 'Awaiting', 'pending'); return; }
+  setAccTotal('rp', $f(rpResult.total), '');
+  const sub = rpResult.usedFallback
+    ? `Redpanda Cloud · eu-west-2 (London) [fallback — most expensive region, conservative upper bound]`
+    : `Redpanda Cloud · ${rpResult.regionLabel}`;
+  set('rp-sub', sub);
+  const container = document.getElementById('rp-breakdown-rows');
+  container.innerHTML = rpResult.breakdown.map(item => `
+    <div class="drow">
+      <div class="drow-l">
+        <div class="drow-name">${item.name}</div>
+        <div class="drow-calc">${item.detail}</div>
+      </div>
+      <div class="drow-val">${$f(item.amount)}</div>
+    </div>
+  `).join('');
+}
+
+function renderBarChart(condenseTotal, mskTotal, ehTotal, ibmTotal, diyTotal, rpTotal) {
   const providers = [
     {id:'condense',name:'Condense',        color:'var(--condense)',total:condenseTotal},
     {id:'msk',     name:'AWS MSK',          color:'var(--msk)',    total:mskTotal},
     {id:'eh',      name:'Azure Event Hubs', color:'var(--eh)',     total:ehTotal},
+    {id:'rp',      name:'Redpanda Cloud',   color:'var(--rp)',     total:rpTotal},
     {id:'diy',     name:'DIY Kafka',        color:'var(--amber)',  total:diyTotal},
   ];
   const known = providers.filter(p => p.total != null).map(p => p.total);
@@ -1149,4 +1252,3 @@ function toggleAcc(id) {
 </script>
 </body>
 </html>
- 
